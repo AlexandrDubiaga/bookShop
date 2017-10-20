@@ -1,0 +1,304 @@
+
+CREATE TABLE `authors` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+INSERT INTO `authors` (`id`, `name`) VALUES
+(1, 'Adriana Chiloxo'),
+(2, 'Volex Molon'),
+(3, 'Paul Raser'),
+(4, 'Aloxo Montin'),
+(5, 'Perlen Sikel'),
+(6, 'George Armani),
+(7, 'Djon Kenedi'),
+(8, 'Santin Valox'),
+(9, 'Rudin Levih');
+
+
+
+CREATE TABLE `books` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `price` decimal(7,2) NOT NULL,
+  `description` text NOT NULL,
+  `discount` decimal(7,2) DEFAULT '0.00',
+  `active` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `img` varchar(255) NOT NULL DEFAULT 'static/img/no_image.jpg'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `books` (`id`, `title`, `price`, `description`, `discount`, `active`, `img`) VALUES
+(1, 'Tarzan', '7.95', 'Good book', '3.00', 'yes', 'static/img/one.jpg'),
+(2, 'Master and margarita', '11.06', 'Interesting book', '43.00', 'yes', 'static/img/two.jpg'),
+(3, 'Alue Parusa', '11.01', 'Nice story', '8.00', 'yes', 'static/img/three.jpg'),
+(4, 'Po kom zvonit kolokol', '11.21', 'Simple story.', '3.02', 'yes', 'static/img/fourth.jpg'),
+(6, 'Voina i Mir', '09.31', 'Danger story', '33.00', 'yes', 'static/img/fighth.jpg'),
+(8, 'Simple air', '13.49', 'Advanced story', '14.00', 'yes', 'static/img/six.jpg');
+
+
+CREATE TABLE `book_to_author` (
+  `id_book` int(11) NOT NULL,
+  `id_author` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `book_to_author` (`id_book`, `id_author`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 2),
+(6, 9),
+(8, 4);
+
+
+CREATE TABLE `book_to_genre` (
+  `id_book` int(11) NOT NULL,
+  `id_genre` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `book_to_genre` (`id_book`, `id_genre`) VALUES
+(1, 4),
+(2, 9),
+(3, 5),
+(4, 5),
+(5, 6),
+(6, 6),
+(8, 7);
+
+
+
+
+CREATE TABLE `cart` (
+  `id` int(11) NOT NULL,
+  `id_book` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL,
+  `count` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `cart` (`id`, `id_book`, `id_client`, `count`) VALUES
+(2, 4, 15, 3);
+
+
+
+CREATE TABLE `clients` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `login` varchar(11) NOT NULL,
+  `pass` varchar(255) NOT NULL,
+  `discount` decimal(7,2) NOT NULL DEFAULT '0.00',
+  `hash` varchar(255) NOT NULL DEFAULT 'first_hash',
+  `role` enum('admin','user') NOT NULL DEFAULT 'user',
+  `active` enum('yes','no') NOT NULL DEFAULT 'yes'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+
+
+INSERT INTO `clients` (`id`, `first_name`, `last_name`, `login`, `pass`, `discount`, `hash`, `role`, `active`) VALUES
+(1, 'Бронислав', 'aaaa', 'aaaa', '2f7b52aacfbf6f44e13d27656ecb1f59', '10.00', '52a45d1488bba42567899dbd67f6f1e5', 'user', 'yes'),
+(13, 'Василий', 'Бутаперцев', 'vasia', 'ec6a6536ca304edf844d1d248a4f08dc', '0.00', 'ae8969467b0cc30d43996fb481fca56d', 'user', 'no'),
+(15, 'Рутище', 'СуперПупер', 'admin', 'c3284d0f94606de1fd2af172aba15bf3', '0.00', '43756d75fe9bbaa226cb407caeab6da7', 'admin', 'yes');
+
+
+
+CREATE TABLE `genres` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+
+
+INSERT INTO `genres` (`id`, `name`) VALUES
+(1, 'Melodramma'),
+(2, 'Love'),
+(3, 'Vestern'),
+(4, 'Triller'),
+(5, 'Musicl'),
+(6, 'Fear'),
+(7, 'Kill'),
+(8, 'Dramma'),
+(9, 'Komedia');
+
+
+
+CREATE TABLE `history_book` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `genre` varchar(255) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `price` decimal(7,0) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL,
+  `discount_client` decimal(10,0) NOT NULL DEFAULT '0',
+  `status` enum('processed','sent') NOT NULL DEFAULT 'processed',
+  `id_payment` int(11) NOT NULL,
+  `total_discount` decimal(7,2) NOT NULL,
+  `total_price` decimal(7,2) NOT NULL,
+  `date_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+INSERT INTO `orders` (`id`, `id_client`, `discount_client`, `status`, `id_payment`, `total_discount`, `total_price`, `date_time`) VALUES
+(57, 1, '10', 'processed', 8, '6.47', '17.54', '2017-10-18 13:32:00'),
+(59, 1, '10', 'processed', 4, '21.56', '153.27', '2017-10-18 13:54:13'),
+(60, 1, '10', 'processed', 5, '6.47', '17.54', '2017-10-18 14:05:33'),
+(61, 1, '10', 'processed', 8, '1.88', '11.07', '2017-10-18 14:06:02');
+
+
+
+CREATE TABLE `orders_full_info` (
+  `id` int(11) NOT NULL,
+  `id_order` int(11) NOT NULL,
+  `id_book` int(11) NOT NULL,
+  `title_book` varchar(255) NOT NULL,
+  `count` int(11) NOT NULL,
+  `price` decimal(7,2) NOT NULL,
+  `discount_book` decimal(7,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+INSERT INTO `orders_full_info` (`id`, `id_order`, `id_book`, `title_book`, `count`, `price`, `discount_book`) VALUES
+(15, 57, 1, 'Ivy and the Inky Butterfly', 1, '12.95', '5.00'),
+(16, 57, 2, 'The Sun and Her Flowers', 1, '11.06', '35.00'),
+(17, 59, 6, 'Tin Man', 4, '11.31', '0.00'),
+(18, 59, 8, 'The Very Hungry', 6, '6.49', '0.00'),
+(19, 59, 1, 'Ivy and the Inky Butterfly', 7, '12.95', '5.00'),
+(20, 60, 1, 'Ivy and the Inky Butterfly', 1, '12.95', '5.00'),
+(21, 60, 2, 'The Sun and Her Flowers', 1, '11.06', '35.00'),
+(22, 61, 1, 'Ivy and the Inky Butterfly', 1, '12.95', '5.00');
+
+
+
+CREATE TABLE `payment` (
+  `id` int(11) NOT NULL,
+  `name` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `payment` (`id`, `name`) VALUES
+(1, 'PayPal'),
+(2, 'RBK Money'),
+(3, 'Yandex Money'),
+(4, 'LiqPay'),
+(5, 'Ukash'),
+(6, 'EasyPay'),
+(7, 'AlertPay'),
+(8, 'QIWI');
+
+
+ALTER TABLE `authors`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `books`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `book_to_author`
+  ADD KEY `book_to_author_fk0` (`id_author`),
+  ADD KEY `book_to_author_fk1` (`id_book`);
+
+
+ALTER TABLE `book_to_genre`
+  ADD KEY `book_to_genre_fk0` (`id_genre`),
+  ADD KEY `book_to_genre_fk1` (`id_book`);
+
+
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cart_fk0` (`id_book`),
+  ADD KEY `cart_fk1` (`id_client`);
+
+
+ALTER TABLE `clients`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `login` (`login`);
+
+
+ALTER TABLE `genres`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `history_book`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_fk0` (`id_client`),
+  ADD KEY `orders_fk1` (`id_payment`);
+
+
+ALTER TABLE `orders_full_info`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_full_info_fk0` (`id_order`),
+  ADD KEY `orders_full_info_fk1` (`id_book`);
+
+
+ALTER TABLE `payment`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `authors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+ALTER TABLE `books`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+ALTER TABLE `cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+ALTER TABLE `clients`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+ALTER TABLE `genres`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+ALTER TABLE `history_book`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+
+ALTER TABLE `orders_full_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+ALTER TABLE `payment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+ALTER TABLE `book_to_author`
+  ADD CONSTRAINT `book_to_author_fk0` FOREIGN KEY (`id_author`) REFERENCES `authors` (`id`),
+  ADD CONSTRAINT `book_to_author_fk1` FOREIGN KEY (`id_book`) REFERENCES `books` (`id`);
+
+
+ALTER TABLE `book_to_genre`
+  ADD CONSTRAINT `book_to_genre_fk0` FOREIGN KEY (`id_genre`) REFERENCES `genres` (`id`),
+  ADD CONSTRAINT `book_to_genre_fk1` FOREIGN KEY (`id_book`) REFERENCES `books` (`id`);
+
+
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_fk0` FOREIGN KEY (`id_book`) REFERENCES `books` (`id`),
+  ADD CONSTRAINT `cart_fk1` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id`);
+
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_fk0` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id`),
+  ADD CONSTRAINT `orders_fk1` FOREIGN KEY (`id_payment`) REFERENCES `payment` (`id`);
+
+
+ALTER TABLE `orders_full_info`
+  ADD CONSTRAINT `orders_full_info_fk0` FOREIGN KEY (`id_order`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `orders_full_info_fk1` FOREIGN KEY (`id_book`) REFERENCES `books` (`id`);
+

@@ -15,8 +15,7 @@ class RestServer extends DB
         parent::__construct();
         $this->db = $this->dBMain;
     }
-
-
+    
     public function run()
     {
       $this->url = list($s, $user, $REST, $server, $api, $dir, $index, $class, $data) = explode("/", $_SERVER['REQUEST_URI'], 7);
@@ -44,16 +43,9 @@ class RestServer extends DB
                 $this->setMethod('post'.ucfirst($dir), explode('/', $index),$put);
                 break;
                 case 'PUT':
-                $putV = (explode('&', file_get_contents("php://input")));
-                $put = array();
-                foreach ($putV as $value)
-                {
-                    $keyValue = explode('=', $value);
-                    $put[$keyValue[0]]=$keyValue[1];
-                }
-
-                $this->setMethod('put'.ucfirst($dir), explode('/', $index), $put);
-                break;
+                    $put = json_decode(file_get_contents("php://input"), true);
+                    $this->setMethod('put'.ucfirst($dir), explode('/', $index), $put);
+                    break;
             case 'OPTIONS':
                 header('Access-Control-Allow-Methods: PUT');
                 header('Access-Control-Allow-Origin:*');
